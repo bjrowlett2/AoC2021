@@ -1,0 +1,7 @@
+{
+    "name": "aoc",
+    "extensions": [
+        "rust-lang.rust"
+    ],
+    "image": "rust:1.56.1"
+}
