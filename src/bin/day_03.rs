@@ -33,6 +33,10 @@ fn main() {
     };
 }
 
+fn is_set(number: &i64, place: usize) -> bool {
+    return ((number >> place) & 1) == 1;
+}
+
 fn most_common(numbers: &Vec<i64>, place: usize) -> i64 {
     let mut num_ones = 0;
     let mut num_zeros = 0;
@@ -73,11 +77,6 @@ fn least_common(numbers: &Vec<i64>, place: usize) -> i64 {
     };
 }
 
-
-fn is_set(number: &i64, place: usize) -> bool {
-    return ((number >> place) & 1) == 1;
-}
-
 fn solve_part_1(day: &Day03) -> Result<i64, String> {
     let mut gamma_rate = 0;
     let mut epsilon_rate = 0;
@@ -95,10 +94,6 @@ fn solve_part_1(day: &Day03) -> Result<i64, String> {
     return Ok(gamma_rate * epsilon_rate);
 }
 
-fn is_match(number: &i64, place: usize, bit_condition: i64) -> bool {
-    return ((number >> place) & 1) == bit_condition;
-}
-
 fn solve_part_2(day: &Day03) -> Result<i64, String> {
     let mut oxygen = day.numbers.to_vec();
 
@@ -108,7 +103,7 @@ fn solve_part_2(day: &Day03) -> Result<i64, String> {
         let most_common = most_common(&oxygen, place);
 
         oxygen.retain(|number| {
-            return is_match(&number, place, most_common);
+            return ((number >> place) & 1) == most_common;
         });
 
         if oxygen.len() == 1 {
@@ -124,7 +119,7 @@ fn solve_part_2(day: &Day03) -> Result<i64, String> {
         let least_common = least_common(&carbon_dioxide, place);
 
         carbon_dioxide.retain(|number| {
-            return is_match(&number, place, least_common);
+            return ((number >> place) & 1) == least_common;
         });
         
         if carbon_dioxide.len() == 1 {
