@@ -1,5 +1,7 @@
 mod aoc;
 
+use itertools::sorted;
+
 struct Day07 {
     positions: Vec<i64>,
 }
@@ -29,59 +31,42 @@ fn main() {
     };
 }
 
+fn mean(vec: &Vec<i64>) -> i64 {
+    let mut sum = 0;
+    for value in vec {
+        sum += value;
+    }
+
+    return sum / vec.len() as i64;
+}
+
+fn median(vec: &Vec<i64>) -> i64 {
+    let mut s = sorted(vec);
+    return match s.nth(s.len() / 2) {
+        Some(value) => *value,
+        None => panic!("No median found"),
+    };
+}
+
 fn solve_part_1(day: &Day07) -> Result<i64, String> {
-    let mut minimum = i64::MAX;
-    let mut maximum = i64::MIN;
+    let target = median(&day.positions);
+
+    let mut fuel = 0;
     for position in &day.positions {
-        if *position < minimum {
-            minimum = *position;
-        }
-
-        if *position > maximum {
-            maximum = *position;
-        }
+        fuel += (position - target).abs();
     }
 
-    let mut total_fuel = i64::MAX;
-    for target in minimum..(maximum + 1) {
-        let mut fuel = 0;
-        for position in &day.positions {
-            fuel += (position - target).abs();
-        }
-
-        if fuel < total_fuel {
-            total_fuel = fuel;
-        }
-    }
-
-    return Ok(total_fuel);
+    return Ok(fuel);
 }
 
 fn solve_part_2(day: &Day07) -> Result<i64, String> {
-    let mut minimum = i64::MAX;
-    let mut maximum = i64::MIN;
+    let target = mean(&day.positions);
+
+    let mut fuel = 0;
     for position in &day.positions {
-        if *position < minimum {
-            minimum = *position;
-        }
-
-        if *position > maximum {
-            maximum = *position;
-        }
+        let distance = (position - target).abs();
+        fuel += distance * (distance + 1) / 2;
     }
 
-    let mut total_fuel = i64::MAX;
-    for target in minimum..(maximum + 1) {
-        let mut fuel = 0;
-        for position in &day.positions {
-            let distance = (position - target).abs();
-            fuel += distance * (distance + 1) / 2;
-        }
-
-        if fuel < total_fuel {
-            total_fuel = fuel;
-        }
-    }
-
-    return Ok(total_fuel);
+    return Ok(fuel);
 }

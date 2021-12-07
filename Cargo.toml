@@ -4,3 +4,6 @@ version = "1.0.0"
 edition = "2021"
 publish = false
 default-run = "aoc"
+
+[dependencies]
+itertools = "0.10.3"
