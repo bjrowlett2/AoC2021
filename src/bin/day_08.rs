@@ -102,20 +102,19 @@ fn solve_part_2(day: &Day08) -> Result<i64, String> {
         for pattern in &patterns {
             let minus_1 = except(&pattern, &patterns[0]);
             let minus_4 = except(&pattern, &patterns[2]);
-            let minus_7 = except(&pattern, &patterns[1]);
 
             if pattern.len() == 5 {
-                match (minus_1.len(), minus_4.len(), minus_7.len()) {
-                    (4, 3, 3) => digits.insert(&pattern, 2),
-                    (3, 2, 2) => digits.insert(&pattern, 3),
-                    (4, 2, 3) => digits.insert(&pattern, 5),
+                match (minus_1.len(), minus_4.len()) {
+                    (4, 3) => digits.insert(&pattern, 2),
+                    (3, 2) => digits.insert(&pattern, 3),
+                    (4, 2) => digits.insert(&pattern, 5),
                     _ => panic!("No matching length tuple found"),
                 };
             } else if pattern.len() == 6 {
-                match (minus_1.len(), minus_4.len(), minus_7.len()) {
-                    (4, 3, 3) => digits.insert(&pattern, 0),
-                    (5, 3, 4) => digits.insert(&pattern, 6),
-                    (4, 2, 3) => digits.insert(&pattern, 9),
+                match (minus_1.len(), minus_4.len()) {
+                    (4, 3) => digits.insert(&pattern, 0),
+                    (5, 3) => digits.insert(&pattern, 6),
+                    (4, 2) => digits.insert(&pattern, 9),
                     _ => panic!("No matching length tuple found"),
                 };
             }
