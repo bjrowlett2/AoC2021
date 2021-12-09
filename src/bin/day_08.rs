@@ -75,139 +75,49 @@ fn solve_part_1(day: &Day08) -> Result<i64, String> {
     return Ok(count);
 }
 
-fn except(this: &String, that: &String) -> String {
-    let mut result = String::new();
-    for ch in this.chars() {
-        if !that.contains(ch) {
-            result.push(ch);
+fn except(minuend: &String, subtrahend: &String) -> String {
+    let mut difference = String::new();
+    for segment in minuend.chars() {
+        if !subtrahend.contains(segment) {
+            difference.push(segment);
         }
     }
 
-    return result;
+    return difference;
 }
 
-fn overlap(this: &String, that: &String) -> i64 {
-    let mut overlap = 0;
-    for ch1 in this.chars() {
-        for ch2 in that.chars() {
-            if ch1 == ch2 {
-                overlap += 1;
-            }
-        }
-    }
-
-    return overlap;
-}
-
-// The following code is terrible and I feel bad.
 fn solve_part_2(day: &Day08) -> Result<i64, String> {
     let mut sum = 0;
     for signal in &day.signals {
         let mut patterns = signal.patterns.clone();
         patterns.sort_by_key(|pattern| pattern.len());
 
-        let mut segment_possibilities = vec![];
-        for _ in 0..7 {
-            segment_possibilities.push(String::new());
-        }
-
         let mut digits = HashMap::<&String, i64>::new();
 
-        // 1
         digits.insert(&patterns[0], 1);
-        
-        segment_possibilities[2] = patterns[0].to_string();
-        segment_possibilities[5] = patterns[0].to_string();
-
-        // 7
-        digits.insert(&patterns[1], 7);
-
-        segment_possibilities[0] = except(&patterns[1], &patterns[0]);
-
-        // 4
         digits.insert(&patterns[2], 4);
-
-        segment_possibilities[1] = except(&patterns[2], &segment_possibilities[2]);
-        segment_possibilities[1] = except(&segment_possibilities[1], &segment_possibilities[5]);
-        segment_possibilities[3] = except(&patterns[2], &segment_possibilities[2]);
-        segment_possibilities[3] = except(&segment_possibilities[3], &segment_possibilities[5]);
-
-        // 8
+        digits.insert(&patterns[1], 7);
         digits.insert(&patterns[9], 8);
 
-        // 0
         for pattern in &patterns {
-            if pattern.len() == 6 {
-                if overlap(&pattern, &segment_possibilities[3]) == 1 {
-                    digits.insert(&pattern, 0);
+            let minus_1 = except(&pattern, &patterns[0]);
+            let minus_4 = except(&pattern, &patterns[2]);
+            let minus_7 = except(&pattern, &patterns[1]);
 
-                    segment_possibilities[3] = except(&segment_possibilities[3], &pattern);
-                    segment_possibilities[1] = except(&segment_possibilities[1], &segment_possibilities[3]);
-
-                    break;
-                }
-            }
-        }
-
-        // 5
-        for pattern in &patterns {
             if pattern.len() == 5 {
-                if pattern.contains(&segment_possibilities[1]) {
-                    digits.insert(&pattern, 5);
-
-                    segment_possibilities[2] = except(&segment_possibilities[2], &pattern);
-                    segment_possibilities[5] = except(&segment_possibilities[5], &segment_possibilities[2]);
-
-                    break;
-                }
-            }
-        }
-
-        // 9
-        for pattern in &patterns {
-            if pattern.len() == 6 {
-                if pattern.contains(&segment_possibilities[2]) {
-                    if pattern.contains(&segment_possibilities[3]) {
-                        digits.insert(&pattern, 9);
-
-                        segment_possibilities[4] = except(&String::from("abcdefg"), &pattern);
-
-                        segment_possibilities[6] = except(&String::from("abcdefg"), &segment_possibilities[0]);
-                        segment_possibilities[6] = except(&segment_possibilities[6], &segment_possibilities[1]);
-                        segment_possibilities[6] = except(&segment_possibilities[6], &segment_possibilities[2]);
-                        segment_possibilities[6] = except(&segment_possibilities[6], &segment_possibilities[3]);
-                        segment_possibilities[6] = except(&segment_possibilities[6], &segment_possibilities[4]);
-                        segment_possibilities[6] = except(&segment_possibilities[6], &segment_possibilities[5]);
-
-                        break;
-                    }
-                }
-            }
-        }
-        
-        for pattern in &patterns {
-            // 2, 3
-            if pattern.len() == 5 {
-                if pattern.contains(&segment_possibilities[2]) {
-                    if pattern.contains(&segment_possibilities[4]) {
-                        digits.insert(&pattern, 2);
-                    }
-                }
-
-                if pattern.contains(&segment_possibilities[2]) {
-                    if pattern.contains(&segment_possibilities[5]) {
-                        digits.insert(&pattern, 3);
-                    }
-                }
-            }
-            
-            // 6
-            if pattern.len() == 6 {
-                if pattern.contains(&segment_possibilities[3]) {
-                    if pattern.contains(&segment_possibilities[4]) {
-                        digits.insert(&pattern, 6);
-                    }
-                }
+                match (minus_1.len(), minus_4.len(), minus_7.len()) {
+                    (4, 3, 3) => digits.insert(&pattern, 2),
+                    (3, 2, 2) => digits.insert(&pattern, 3),
+                    (4, 2, 3) => digits.insert(&pattern, 5),
+                    _ => panic!("No matching length tuple found"),
+                };
+            } else if pattern.len() == 6 {
+                match (minus_1.len(), minus_4.len(), minus_7.len()) {
+                    (4, 3, 3) => digits.insert(&pattern, 0),
+                    (5, 3, 4) => digits.insert(&pattern, 6),
+                    (4, 2, 3) => digits.insert(&pattern, 9),
+                    _ => panic!("No matching length tuple found"),
+                };
             }
         }
 
