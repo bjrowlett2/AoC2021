@@ -6,4 +6,5 @@ publish = false
 default-run = "aoc"
 
 [dependencies]
+colored = "2.0.0"
 itertools = "0.10.3"
