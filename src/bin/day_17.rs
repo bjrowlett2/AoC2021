@@ -80,13 +80,26 @@ fn step(state: &State) -> State {
     };
 }
 
+fn past_target(day: &Day17, state: &State) -> bool {
+    return state.position.0 > *day.x_range.end()
+        || state.position.1 < *day.y_range.start();
+}
+
+fn inside_target(day: &Day17, state: &State) -> bool {
+    return day.x_range.contains(&state.position.0)
+        && day.y_range.contains(&state.position.1);
+}
+
 fn solve_part_1(day: &Day17) -> Result<i64, String> {
-    let size = 150;
-    let rounds = 250;
-    
-    let mut actual_max_y = i64::MIN;
-    for y_velocity in 0..=size {
-        for x_velocity in 0..=size {
+    // Assume X is positive.
+    let x_size = *day.x_range.end();
+
+    // Assume Y is negative.
+    let y_size = day.y_range.start().abs();
+
+    let mut global_max_y = i64::MIN;
+    for x_velocity in 0..=x_size {
+        for y_velocity in -y_size..=y_size {
             let mut state = State {
                 position: (0, 0),
                 velocity: (x_velocity, y_velocity),
@@ -94,49 +107,56 @@ fn solve_part_1(day: &Day17) -> Result<i64, String> {
 
             let mut max_y = i64::MIN;
 
-            for _ in 0..rounds {
+            loop {
                 state = step(&state);
+
+                if past_target(&day, &state) {
+                    break;
+                }
         
                 if state.position.1 > max_y {
                     max_y = state.position.1;
                 }
-                
-                if day.x_range.contains(&state.position.0) {
-                    if day.y_range.contains(&state.position.1) {
-                        if max_y > actual_max_y {
-                            actual_max_y = max_y;
-                        }
 
-                        break;
+                if inside_target(&day, &state) {
+                    if max_y > global_max_y {
+                        global_max_y = max_y;
                     }
+
+                    break;
                 }
             }
         }
     }
 
-    return Ok(actual_max_y);
+    return Ok(global_max_y);
 }
 
 fn solve_part_2(day: &Day17) -> Result<i64, String> {
-    let size = 250;
-    let rounds = 250;
-    
+    // Assume X is positive.
+    let x_size = *day.x_range.end();
+
+    // Assume Y is negative.
+    let y_size = day.y_range.start().abs();
+
     let mut num_hits = 0;
-    for y_velocity in -size..=size {
-        for x_velocity in 0..=size {
+    for x_velocity in 0..=x_size {
+        for y_velocity in -y_size..=y_size {
             let mut state = State {
                 position: (0, 0),
                 velocity: (x_velocity, y_velocity),
             };
 
-            for _ in 0..rounds {
+            loop {
                 state = step(&state);
-        
-                if day.x_range.contains(&state.position.0) {
-                    if day.y_range.contains(&state.position.1) {
-                        num_hits += 1;
-                        break;
-                    }
+
+                if past_target(&day, &state) {
+                    break;
+                }
+
+                if inside_target(&day, &state) {
+                    num_hits += 1;
+                    break;
                 }
             }
         }
