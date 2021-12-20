@@ -21,7 +21,7 @@ impl TimedResult {
 }
 
 fn main() {
-    const DAYS: i64 = 19;
+    const DAYS: i64 = 20;
 
     for arg in env::args() {
         if arg == "--help" {
