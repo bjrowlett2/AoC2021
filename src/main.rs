@@ -53,7 +53,7 @@ fn main() {
             if let Ok(build_status) = build_process.wait() {
                 if !build_status.success() {
                     if let Some(build_code) = build_status.code() {
-                        panic!("Build process failed: Day {} (exit status: {})", day, build_code);
+                        panic!("Build process failed: Day {:0>2} (exit status: {})", day, build_code);
                     }
                 }
             }
@@ -75,7 +75,7 @@ fn main() {
             if let Ok(execute_status) = execute_process.wait() {
                 if !execute_status.success() {
                     if let Some(execute_code) = execute_status.code() {
-                        panic!("Execute process failed: Day {} (exit status: {})", day, execute_code);
+                        panic!("Execute process failed: Day {:0>2} (exit status: {})", day, execute_code);
                     }
                 }
             }
