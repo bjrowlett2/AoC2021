@@ -41,22 +41,19 @@ fn main() {
 }
 
 fn enhance(image: &HashMap<Point, char>, x: i64, y: i64, outside: char) -> usize {
-    let kernel = vec![
-        (x - 1, y - 1), (x + 0, y - 1), (x + 1, y - 1),
-        (x - 1, y + 0), (x + 0, y + 0), (x + 1, y + 0),
-        (x - 1, y + 1), (x + 0, y + 1), (x + 1, y + 1),
-    ];
-        
     let mut index = 0;
-    for point in kernel {
-        let mut ch = outside;
-        if let Some(pixel) = image.get(&point) {
-            ch = *pixel;
-        }
-        
-        index *= 2;
-        if ch == '#' {
-            index += 1;
+    for dy in -1..=1 {
+        for dx in -1..=1 {
+            let mut ch = outside;
+            let point = (x + dx, y + dy);
+            if let Some(pixel) = image.get(&point) {
+                ch = *pixel;
+            }
+            
+            index *= 2;
+            if ch == '#' {
+                index += 1;
+            }
         }
     }
 
