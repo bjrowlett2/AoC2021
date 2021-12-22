@@ -40,12 +40,12 @@ fn main() {
     match solve_part_1(&day) {
         Ok(value) => println!("Part 1: {}", value),
         Err(reason) => panic!("solve_part_1 failed: {}", reason),
-    };
+    }
 
     match solve_part_2(&day) {
         Ok(value) => println!("Part 2: {}", value),
         Err(reason) => panic!("solve_part_2 failed: {}", reason),
-    };
+    }
 }
 
 fn parse_value(input: &str) -> i64 {

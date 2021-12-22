@@ -19,12 +19,12 @@ fn main() {
     match solve_part_1(&_day) {
         Ok(value) => println!("Part 1: {}", value),
         Err(reason) => panic!("solve_part_1 failed: {}", reason),
-    };
+    }
 
     match solve_part_2(&_day) {
         Ok(value) => println!("Part 2: {}", value),
         Err(reason) => panic!("solve_part_2 failed: {}", reason),
-    };
+    }
 }
 
 fn solve_part_1(_day: &Day18) -> Result<i64, String> {
