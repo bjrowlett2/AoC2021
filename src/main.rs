@@ -90,9 +90,9 @@ fn main() {
 
     for timed_result in &timed_results {
         let mut color = Color::Red;
-        if timed_result.duration < 0.04 {
+        if timed_result.duration < 0.5 {
             color = Color::Green;
-        } else if timed_result.duration < 0.10 {
+        } else if timed_result.duration < 1.0 {
             color = Color::Yellow;
         }
 
